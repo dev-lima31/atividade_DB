@@ -1,0 +1,164 @@
+CREATE TABLE Aluno (
+	Id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	Nome VARCHAR (255) NULL,
+	DataNascimento DATETIME2 (7) NULL);
+
+CREATE TABLE Notas (
+	IdNota INT IDENTITY (1,1) NOT NULL,
+	IdAluno INT NOT NULL,
+	Disciplina VARCHAR (255) NULL,
+	Nota DECIMAL NULL,
+	CONSTRAINT FK_id
+	FOREIGN KEY (IdAluno)
+	REFERENCES Aluno(Id)
+);
+	
+
+
+INSERT INTO Aluno (Nome, DataNascimento)
+VALUES
+('Luan', '2000-12-10'),
+('Luis', '2005-05-12'),
+('Arroz', '2008-08-10');
+
+
+INSERT INTO Notas (IdAluno, Disciplina, Nota)
+VALUES
+(2, 'Matemática', 9),
+(1, 'Matemática', 3),
+(3, 'Matemática', NULL),
+(2, 'Biologia', 8),
+(1, 'Biologia', 3),
+(3, 'Biologia', NULL),
+(2, 'História', 9),
+(1, 'História', 5),
+(3, 'História', NULL);
+
+
+SELECT *
+FROM Aluno
+INNER JOIN Notas ON Aluno.Id = Notas.IdAluno
+
+SELECT Disciplina, AVG(Nota) Medias
+FROM Notas
+GROUP BY Disciplina
+
+SELECT *
+FROM Aluno
+INNER JOIN Notas ON Aluno.Id = Notas.IdAluno
+WHERE Nota >= 7
+
+SELECT *
+FROM Aluno
+INNER JOIN Notas ON Aluno.Id = Notas.IdAluno
+WHERE Nota IS NULL
+
+SELECT *	 
+FROM Notas
+
+
+DROP TABLE Aluno
+DROP TABLE Notas
+
+
+------------------------------------------------------------
+
+CREATE TABLE Filme (
+	Id INT IDENTITY (1,1) PRIMARY KEY,
+	Titulo VARCHAR (255) NULL,
+	Genero VARCHAR (255) NULL,
+	Ano INT NULL);
+	
+CREATE TABLE Sessoes (
+	IdSessao INT IDENTITY (1,1) PRIMARY KEY,
+	IdFilme INT,
+	DataSessao DATE,
+	Hora TIME(0),
+	CONSTRAINT FK_Idsessao
+	FOREIGN KEY (IdFilme)
+	REFERENCES FIlme(Id));
+
+
+INSERT INTO Filme (Titulo, Genero, Ano)
+VALUES
+('Jorrada nas Estrelas', 'Aventura', 1984),
+('Como se nem tivesse acontecido', 'Romance', 2015),
+('Plock', 'Suspense', 2012),
+('Todo mundo silasca como merece', 'Comédia', 1001),
+('Ilha de Epstein', 'Drama', 1945),
+('Stuart little', 'Infantil', 1917);
+
+INSERT INTO Sessoes (IdFilme, DataSessao, Hora)
+VALUES
+(6, '2008-04-15', '19:00:00'),
+(3, '1500-04-24', '19:00:00'),
+(4, '2009-04-24', '12:00:00'),
+(2, '2001-12-04', '08:00:00'),
+(1, '2018-12-12', '15:00:00');
+
+SELECT *
+FROM Filme
+WHERE Genero = 'Aventura'
+
+SELECT *
+FROM Filme
+INNER JOIN Sessoes ON Filme.Id = Sessoes.IdFilme
+WHERE DataSessao > '2014-12-31';
+
+SELECT IdFilme, COUNT(*) Quant
+FROM Sessoes
+GROUP BY IdFilme
+
+SELECT Filme.Titulo, Sessoes.DataSessao
+FROM Filme
+INNER JOIN Sessoes ON Filme.Id = Sessoes.IdFilme
+
+SELECT *
+FROM Filme
+
+SELECT *
+FROM Sessoes
+
+DROP TABLE Sessoes
+DROP TABLE Filme
+
+---------------------------------------------------------------
+
+CREATE TABLE Pacientes (
+	Id INT IDENTITY (1,1) PRIMARY KEY,
+	Nome VARCHAR (255) NULL,
+	DataNascimento DATE);
+
+CREATE TABLE Consultas (
+	IdConsulta INT IDENTITY (1,1) PRIMARY KEY,
+	IdPaciente INT NOT NULL,
+	DataConsulta DATE,
+	Medico VARCHAR (255)
+	CONSTRAINT FK_CONSULTA
+	FOREIGN KEY (IdPaciente)
+	REFERENCES Pacientes(Id)
+);
+
+INSERT INTO Pacientes (Nome, DataNascimento)
+VALUES
+('Luan', '2000-12-10'),
+('Luis', '2005-05-12'),
+('Arroz', '2008-08-10');
+
+INSERT INTO Consultas (IdPaciente, DataConsulta, Medico)
+VALUES
+(2, '2000-10-05', 'SIM'),
+(1, '2019-12-25', 'NÃO'),
+(3, '2024-01-25', 'TALVEZ');
+
+SELECT *
+FROM Pacientes
+INNER JOIN Consultas ON Pacientes.Id = Consultas.IdPaciente
+WHERE Medico = 'SIM'
+
+SELECT DataConsulta, Pacientes.Nome
+FROM Consultas
+GROUP BY DataConsulta
+
+DROP TABLE Pacientes
+DROP TABLE Consultas
